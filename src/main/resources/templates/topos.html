@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+
+<head>
+    <title>Espace topos</title>
+
+</head>
+
+<body>
+
+<section layout:fragment="content">
+    <!-- INSERT CONTENT HERE -->
+
+    <table class="list" >
+        <tr>
+            <th>Auteur</th>
+            <th>Titre</th>
+            <th>Région</th>
+
+        </tr>
+        <tr th:each="item : ${list}">
+
+            <td class="author" th:text="${item.getAutor()}">texte </td>
+            <td class="title"><a th:href="@{'/topos/' + ${item.id}}" th:text="${item.getTitle()}">view</a></td>
+            <td class="region" th:text="${item.getRegion().getName()}"></td>
+        </tr>
+    </table>
+
+</section>
+
+<section layout:fragment="content-right">
+    <form action = "/topos" method="post">
+        <fieldset>
+            <label>Ajouter un topo à la collection</label><br/>
+            <label>Auteur</label><br/>
+            <input type="text" name="author"/><br/>
+            <label>Titre</label><br/>
+            <input type="text" name="title"/><br/>
+            <label>Région</label><br/>
+            <select name="region">
+                <option th:each="reg:${regions}" th:value="${reg.getId()}" th:text="${reg.getName()}"/>
+            </select>
+            <input type="submit"/><br/>
+
+        </fieldset>
+    </form>
+</section>
+
+</body>
+</html>

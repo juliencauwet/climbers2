@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+
+<head>
+    <title>Description de la voie</title>
+
+</head>
+
+<body>
+
+<section layout:fragment="content">
+
+    <!-- description de la voie -->
+
+    <h3 th:text="'Nom de la voie: ' + ${route.getName()}"></h3><br/>
+    <h3 th:text="'Nombre de longueurs: ' + ${route.getLengths().size()}"></h3><br/>
+    <h3 th:text="'Difficulté: de ' + ${} ' à ' + ${}"></h3><br/>
+    <br/>
+
+    <!-- Comments -->
+
+    <table>
+        <tr>
+            <th>email</th>
+            <th>Commentaire</th>
+        </tr>
+        <tr th:each="item:${comments}">
+            <td th:text="${item.getEmail()}"></td>
+            <td th:text="${item.getText()}";
+        </tr>
+    </table>
+
+
+
+</section>
+
+<section layout:fragment="content">
+
+    <!-- Formulaire -->
+    <fieldset>
+        <form action="/routedescription" method="post">
+            <label>Laissez un commentaire pour vos impressions sur cette voie</label>
+            <input type="email" placeholder="Votre adresse email">
+            <textarea rows="10" placeholder="Commentaire..."/>
+            <input type="submit">
+        </form>
+    </fieldset>
+
+</section>
+
+</body>
+</html>

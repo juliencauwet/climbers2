@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/sign.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+
+    <title>Authentification</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <fieldset>
+                <form action="/sign" method="post">
+                    <label style="color: floralwhite;">Identifiez-vous</label><br/>
+                    <input class ="sign" type="email" placeholder="Adresse Email" name="emailIn"/><br/>
+                    <input class ="sign" type="password" placeholder="Mot de passe" name="passwordIn"/><br/>
+                    <input type="submit" name="signin" value="signin"/><br/>
+
+                </form>
+            </fieldset>
+        </div>
+        <div class="col-md-6">
+            <fieldset>
+                <form action="/sign" method="post">
+                    <label style="color: floralwhite">Ouvrez un compte</label><br/>
+                    <input class ="sign" type="text" placeholder="Pseudo" name="pseudo"/><br/>
+                    <input class ="sign" type="email" placeholder="Adresse Email" name="emailUp"/><br/>
+                    <input class ="sign" type="password" placeholder="Mot de passe" name="passwordUp1"/><br/>
+                    <input class ="sign" type="password" placeholder="Confirmation Mot de passe" name="passwordUp2"/><br/>
+                    <input type="submit" name="signup" value="signup"/><br/>
+
+                </form>
+            </fieldset>
+
+        </div>
+        <h1 style="color: floralwhite;" th:text="${message}"></h1>
+    </div>
+</div>
+
+
+</body>
+</html>

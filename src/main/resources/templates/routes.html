@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+
+<head>
+    <title>Parcours</title>
+
+</head>
+
+<body>
+
+<section layout:fragment="content">
+    <!-- INSERT CONTENT HERE -->
+        <div class="row">
+            <div class="col-md-4">
+                <ul th:each="site : ${sites}">
+                    <li><a style="color: #213370" th:href="@{'/routes/' + ${site.getId()}}" th:value="${site.getId()}" th:text="${site.getName()}"/></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <ul th:each="area : ${areaList}">
+                    <li><a style="color: #213370" th:href="@{'/routes/' + ${area.getSite().getId()} + '/' + ${area.getId()}}" th:value="${area.getId()}" th:text="${area.getName()}"/></li>
+                </ul>
+            </div>
+
+        </div>
+
+</section>
+
+<section layout:fragment="content-right">
+    <form action = "/routes" method="post">
+        <fieldset>
+            <label>Ajouter un parcours</label><br/>
+            <label>Région</label><br/>
+            <select name="region">
+                <option th:each="reg:${regList}" th:text="${reg.getName()}" th:value="${reg.getId()}"></option>
+            </select><br/>
+            <input type="text" name="sitename" placeholder="Nom du site"/><br/>
+            <input type="text" name="area" placeholder="Nom du secteur"/><br/>
+            <input type="text" name="route" placeholder="Nom de la voie"/><br/>
+            <input type="number" name="lengthnumber" placeholder="nombre de longueurs"/><br/>
+            <input type="submit"/>
+
+        </fieldset>
+    </form>
+</section>
+
+</body>
+</html>
