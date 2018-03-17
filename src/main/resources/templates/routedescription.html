@@ -15,9 +15,10 @@
 
     <h3 th:text="'Nom de la voie: ' + ${route.getName()}"></h3><br/>
     <h3 th:text="'Nombre de longueurs: ' + ${route.getLengths().size()}"></h3><br/>
+   <!--
     <h3 th:text="'Difficulté: de ' + ${} ' à ' + ${}"></h3><br/>
     <br/>
-
+-->
     <!-- Comments -->
 
     <table>
@@ -26,8 +27,8 @@
             <th>Commentaire</th>
         </tr>
         <tr th:each="item:${comments}">
-            <td th:text="${item.getEmail()}"></td>
-            <td th:text="${item.getText()}";
+            <td th:text="${item.getEmail()}"/>
+            <td th:text="${item.getText()}"/>
         </tr>
     </table>
 
@@ -35,15 +36,15 @@
 
 </section>
 
-<section layout:fragment="content">
+<section layout:fragment="content-right">
 
     <!-- Formulaire -->
     <fieldset>
         <form action="/routedescription" method="post">
-            <label>Laissez un commentaire pour vos impressions sur cette voie</label>
-            <input type="email" placeholder="Votre adresse email">
-            <textarea rows="10" placeholder="Commentaire..."/>
-            <input type="submit">
+            <label>Laissez un commentaire pour vos impressions sur cette voie</label><br/>
+            <input type="email" placeholder="Votre adresse email" name="email"/><br/>
+            <textarea rows="10" placeholder="Commentaire..." name="text"/><br/>
+            <input type="submit"/>
         </form>
     </fieldset>
 

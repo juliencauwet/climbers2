@@ -79,7 +79,7 @@ public class RoutesController {
         return "routes";
     }
 
-    @GetMapping("/routes/{siteId}/{routeId}")
+    @GetMapping("/routes/{siteId}/{areaId}")
     public String displayRoutes (@PathVariable String siteId, @PathVariable String areaId, Model model){
         System.out.println("Entrée dans displayRoutes");
         List<Route> routes = routeService.getRoutesPerArea(Integer.parseInt(areaId));

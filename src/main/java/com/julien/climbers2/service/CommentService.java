@@ -16,4 +16,8 @@ public class CommentService {
     public List<Comment> getCommentsperRoute(int id){
         return commentRepository.findCommentsByRouteId(id);
     }
+
+    public void addComment(Comment comment){
+        commentRepository.save(comment);
+    }
 }

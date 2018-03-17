@@ -22,6 +22,11 @@
                     <li><a style="color: #213370" th:href="@{'/routes/' + ${area.getSite().getId()} + '/' + ${area.getId()}}" th:value="${area.getId()}" th:text="${area.getName()}"/></li>
                 </ul>
             </div>
+            <div class="col-md-4">
+                <ul th:each="route : ${routes}">
+                    <li><a style="color: #213370" th:href="@{'/routedescription/' + ${route.getId()}}" th:value="${route.getId()}" th:text="${route.getName()}"/></li>
+                </ul>
+            </div>
 
         </div>
 
