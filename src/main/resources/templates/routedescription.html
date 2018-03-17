@@ -13,8 +13,8 @@
 
     <!-- description de la voie -->
 
-    <h3 th:text="'Nom de la voie: ' + ${route.getName()}"></h3><br/>
-    <h3 th:text="'Nombre de longueurs: ' + ${route.getLengths().size()}"></h3><br/>
+    <h3 th:unless="!${route}" th:text="'Nom de la voie: ' + ${route.getName()}">Pas de nom</h3><br/>
+    <h3 th:unless="!${route}" th:text="'Nombre de longueurs: ' + ${route.getLengths().size()}">Pas de longueurs</h3><br/>
    <!--
     <h3 th:text="'Difficulté: de ' + ${} ' à ' + ${}"></h3><br/>
     <br/>
@@ -40,7 +40,7 @@
 
     <!-- Formulaire -->
     <fieldset>
-        <form action="/routedescription" method="post">
+        <form method="post">
             <label>Laissez un commentaire pour vos impressions sur cette voie</label><br/>
             <input type="email" placeholder="Votre adresse email" name="email"/><br/>
             <textarea rows="10" placeholder="Commentaire..." name="text"/><br/>

@@ -7,10 +7,7 @@ import com.julien.climbers2.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,9 +34,14 @@ public class RouteDescriptionController {
         return "routedescription";
     }
 
-    @PostMapping("/routedescription")
-    public String addComment(@ModelAttribute Comment comment){
+    @PostMapping("/routedescription/{routeId}")
+    public String addComment(@RequestParam String email, @RequestParam String text, @PathVariable String routeId, Model model){
+        Comment comment = new Comment();
+        comment.setEmail(email);
+        comment.setText(text);
+        comment.setRoute(routeService.getRoutebyId(Integer.parseInt(routeId)));
         commentService.addComment(comment);
-        return "routedescription";
+
+        return routeDescription(routeId, model);
     }
 }

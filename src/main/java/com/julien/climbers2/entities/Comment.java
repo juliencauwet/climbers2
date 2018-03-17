@@ -28,7 +28,7 @@ public class Comment {
         this.email = email;
     }
 
-    private Comment() {
+    public Comment() {
 
     }
 
