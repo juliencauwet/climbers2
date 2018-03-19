@@ -9,9 +9,12 @@
     --clr: floralwhite;
 }
 
+th{
+    padding-right: 10px
+}
 
 a{
-    color: floralwhite;
+    color: indianred;
 }
 
 a:hover{
@@ -73,20 +76,10 @@ header{
     margin-top: var(--margT);
 }
 
-table {
-    margin-top: 10px;
-    border-radius: var(--bRs);
-    border: var(--br);
-}
-
-.list{
-    position: center;
-}
-
 ul{
     list-style: none;
 }
-
+/*
 .author{
     background: gray;
     color: floralwhite;
@@ -99,6 +92,7 @@ ul{
 .title{
     background: black ;
 }
+*/
 
 .fontawesome{
     width: fit-content;
@@ -110,12 +104,6 @@ ul{
     margin-right: var(--margL);
 }
 
-td, th{
-    border: black 1px solid;
-    padding: 3px;
-    color: crimson;
-    font-size: 0.7em;
-}
 
 .calendar_wrap {
     padding: 0;

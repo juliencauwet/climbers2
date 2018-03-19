@@ -29,7 +29,7 @@ public class Route {
         this.lengths = lengths;
     }
 
-    private Route(){
+    public Route(){
 
     }
 

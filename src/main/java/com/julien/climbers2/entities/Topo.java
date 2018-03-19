@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Topo {
@@ -11,7 +13,13 @@ public class Topo {
     @Id
     @GeneratedValue
     private int id;
+
+    @NotNull
+    @Size(min = 4, max = 30)
     private String author;
+
+    @NotNull
+    @Size(min = 4, max = 100)
     private String title;
 
     @ManyToOne
@@ -38,8 +46,8 @@ public class Topo {
         return author;
     }
 
-    public void setAutor(String autor) {
-        this.author = autor;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String getTitle() {

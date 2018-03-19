@@ -21,6 +21,10 @@ public class RouteService {
         return routes;
     }
 
+    public void addRoute(Route route){
+        routeRepository.save(route);
+    }
+
     public Route getRoutebyId(int id){
         return routeRepository.findOne(id);
     }

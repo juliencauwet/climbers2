@@ -9,6 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -27,7 +33,12 @@ public class ToposController {
     public String getTopo(@PathVariable String id, Model model){
         int t = Integer.parseInt(id);
         Topo topo = topoService.getTopo(t);
+/* début
 
+
+        model.addAttribute("monthweeks", weeks);
+        model.addAttribute("weekdays", days);
+fin */
         model.addAttribute("title", topo.getTitle());
         model.addAttribute("author", topo.getAutor());
         model.addAttribute("region", topo.getRegion().getName());
@@ -38,15 +49,8 @@ public class ToposController {
     }
 
     @RequestMapping(value = "/topos", method = RequestMethod.POST)
-    public void addTopo(@RequestParam String author, @RequestParam String title,@RequestParam String region, Model model){
-        System.out.println(region);
-        Region reg = regionService.getRegionById(Integer.parseInt(region));
-        System.out.println(reg.getName());
+    public void addTopo(@ModelAttribute @Valid Topo topo, Model model){
 
-        Topo topo = new Topo();
-        topo.setAutor(author);
-        topo.setTitle(title);
-        topo.setRegion(reg);
         topoService.addTopo(topo);
         displayTopos(model);
     }
@@ -70,9 +74,60 @@ public class ToposController {
         List<Region> regionList = regionService.getRegions();
         model.addAttribute("regions", regionList);
 
-
-
         return "topos";
     }
+
+    private int daysPerMonth(int month, int year){
+        int nbDays = 0;
+
+        switch (month){
+            case 1 : case 3 : case 5 :case 7 :case 8 :case 10 : case 12 : nbDays =31;
+        break;
+            case 4: case 6 :
+            case 9: case 11:
+                nbDays = 30;
+                break;
+            case 2:
+                if (((year % 4 == 0) &&
+                        !(year % 100 == 0))
+                        || (year % 400 == 0))
+                    nbDays = 29;
+                else
+                    nbDays = 28;
+                break;}
+
+                return nbDays;
+    }
+
+    private List<Date> generateMonth(int month, int year) throws ParseException {
+        List<Date> dates = null;
+        String date = "01/" + Integer.toString(month) + "/" + Integer.toString(year);
+        String end = Integer.toString(daysPerMonth(month,year));
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+
+        Date firstDay = sdf.parse(date);
+        Date lastDay = sdf.parse(end);
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(firstDay);
+
+        ArrayList<Date> days = new ArrayList<Date>();
+        for(Date d = firstDay ; !d.equals(lastDay)  ;){
+            dates.add(d);
+        }
+
+        System.out.println(days.size());
+
+        ArrayList<String> weeks = new ArrayList<String>();
+        for(int i =1 ; i < 5 ; i++){
+            weeks.add(Integer.toString(i));
+        }
+
+
+
+        return dates;
+    }
+
+
 
 }

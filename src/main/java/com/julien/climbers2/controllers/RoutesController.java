@@ -32,8 +32,6 @@ public class RoutesController {
     @Autowired
     private RouteService routeService;
 
-
-
     /**
      *
      * @param model
@@ -43,7 +41,6 @@ public class RoutesController {
     public String routes(Model model){
 
         List<Region> regions = regionService.getRegions();
-
         model.addAttribute("regList", regions);
 
     return "routes";
@@ -59,12 +56,10 @@ public class RoutesController {
     public String displaySites(@RequestParam String region, Model model){
 
         List<Region> regions = regionService.getRegions();
+        model.addAttribute("regList", regions);
 
         List<Site> sites = siteService.getSitesByRegionId(Integer.parseInt(region));
-
-        model.addAttribute("regList", regions);
         model.addAttribute("sites",sites);
-
 
         return "routes";
     }
@@ -72,19 +67,44 @@ public class RoutesController {
     @GetMapping("/routes/{siteId}")
     public String displayAreas (@PathVariable String siteId, Model model){
 
-       List<Area> areas = areaService.getAreasperSites(Integer.parseInt(siteId));
+        List<Region> regions = regionService.getRegions();
+        model.addAttribute("regList", regions);
 
-       model.addAttribute("areaList", areas );
+       List<Area> areas = areaService.getAreasperSites(Integer.parseInt(siteId));
+       model.addAttribute("areas", areas );
 
         return "routes";
     }
 
     @GetMapping("/routes/{siteId}/{areaId}")
     public String displayRoutes (@PathVariable String siteId, @PathVariable String areaId, Model model){
-        System.out.println("Entrée dans displayRoutes");
-        List<Route> routes = routeService.getRoutesPerArea(Integer.parseInt(areaId));
 
+        List<Region> regions = regionService.getRegions();
+        model.addAttribute("regList", regions);
+
+        List<Route> routes = routeService.getRoutesPerArea(Integer.parseInt(areaId));
         model.addAttribute("routes", routes);
+
+        Area selectedArea = areaService.getAreaPerId(Integer.parseInt(areaId));
+        model.addAttribute("selectedArea", selectedArea.getName());
+
+        Boolean form = true;
+
+        return "routes";
+    }
+
+    @PostMapping(value = "/routes/{siteId}/{areaId}", params = "Ajouter")
+    public String addRoute(@PathVariable String siteId, @PathVariable String areaId, @RequestParam String name, Model model){
+        System.out.println("Entrée dans addRoute");
+
+        Area selectedArea = areaService.getAreaPerId(Integer.parseInt(areaId));
+
+        Route route = new Route();
+        route.setArea(selectedArea);
+        route.setName(name);
+        routeService.addRoute(route);
+
+        model.addAttribute("selectedArea", selectedArea.getName());
 
         return "routes";
     }

@@ -33,7 +33,7 @@ public class HomeController {
             System.out.println("user = " + usor.getPseudo());
             model.addAttribute("username", usor.getPseudo());
         }catch (NullPointerException e){
-            System.out.println("essai");
+            System.out.println("Pas d'utilisateur identifié");
         }
 
         List<Region> regionsList = regionService.getRegions();

@@ -13,6 +13,10 @@ public class AreaService {
     @Autowired
     private AreaRepository areaRepository;
 
+    public Area getAreaPerId(int id){
+        return areaRepository.findOne(id);
+    }
+
     public List<Area> getAreasperSites(int id){
         return areaRepository.findAllBySiteId(id);
     }

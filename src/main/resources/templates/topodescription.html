@@ -7,7 +7,7 @@
 
 </head>
 
-<body th:style="'background:' + ${booked} + ';'">
+<body>
 
 <section layout:fragment="content">
     <!-- INSERT CONTENT HERE -->
@@ -19,31 +19,27 @@
     <h2>Calendrier des réservations</h2>
     <div class="row">
         <div class="col-md-4">
-            <div class="calendar_wrap">
-                <table width="100%" summary="Calendar">
+            <div>
+                <table class="table" summary="Calendar">
                     <tr>Janvier</tr>
                     <thead>
                     <tr>
-                        <th  abbr="Monday" scope="col" title="Lundi">L</th>
-                        <th abbr="Tuesday" scope="col" title="Tuesday">M</th>
-                        <th abbr="Wednesday" scope="col" title="Wednesday">M</th>
-                        <th abbr="Thursday" scope="col" title="Thursday">J</th>
-                        <th abbr="Friday" scope="col" title="Friday">V</th>
-                        <th abbr="Saturday" scope="col" title="Saturday">S</th>
-                        <th abbr="Sunday" scope="col" title="Sunday">D</th>
+                        <th  abbr="Lundi" scope="col" title="Lundi">L</th>
+                        <th abbr="Mardi" scope="col" title="Mardi">M</th>
+                        <th abbr="Mercredi" scope="col" title="Mercredi">M</th>
+                        <th abbr="Jeudi" scope="col" title="Jeudi">J</th>
+                        <th abbr="Vendredi" scope="col" title="Vendredi">V</th>
+                        <th abbr="Samedi" scope="col" title="Samedi">S</th>
+                        <th abbr="Dimanche" scope="col" title="Dimanche">D</th>
                     </tr>
                     </thead>
 
                     <tbody>
-                    <tr>
-                        <td th:style="'background:' + ${booked} + ';'">1</td>
-                        <td>2</td>
-                        <td>3</td>
-                        <td>4</td>
-                        <td>5</td>
-                        <td>6</td>
-                        <td>7</td>
+                    <!--
+                    <tr th:each="week:${monthweeks}">
+                        <td th:each="day:${weekdays}" th:text="" th:value="" th:style="'background:' + ${booked} + ';'">1</td>
                     </tr>
+                    -->
                     <tr>
                         <td>8</td>
                         <td>9</td>
