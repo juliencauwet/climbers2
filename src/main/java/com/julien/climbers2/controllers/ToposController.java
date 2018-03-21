@@ -1,7 +1,9 @@
 package com.julien.climbers2.controllers;
 
+import com.julien.climbers2.entities.Borrowing;
 import com.julien.climbers2.entities.Region;
 import com.julien.climbers2.entities.Topo;
+import com.julien.climbers2.service.BorrowingService;
 import com.julien.climbers2.service.RegionService;
 import com.julien.climbers2.service.TopoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,21 +27,18 @@ public class ToposController {
     private TopoService topoService;
     @Autowired
     private RegionService regionService;
+    @Autowired
+    private BorrowingService borrowingService;
 
-  // @RequestMapping("/entities/{id}")
-  // public Topo getTopo(@PathVariable String id){
-  //     return topoService.getTopo(id);
-  // }
+
     @RequestMapping("/topos/{id}")
-    public String getTopo(@PathVariable String id, Model model){
-        int t = Integer.parseInt(id);
-        Topo topo = topoService.getTopo(t);
+    public String getTopo(@PathVariable String id, HttpSession session, Model model){
+
+        Topo topo = topoService.getTopo(Integer.parseInt(id));
 
         model.addAttribute("title", topo.getTitle());
         model.addAttribute("author", topo.getAuthor());
         model.addAttribute("region", topo.getRegion().getName());
-
-        model.addAttribute("booked","black");
 
         return "topodescription";
     }
@@ -50,15 +50,27 @@ public class ToposController {
         displayTopos(model);
     }
 
-    @RequestMapping(value = "/topos/{id}", method = RequestMethod.PUT)
-    public void updateTopo(@PathVariable String id, @RequestBody Topo topo){
-        topoService.updateTopo(id, topo);
+    @RequestMapping(value = "/topos/{id}", method = RequestMethod.POST)
+    public String topoDescription(@PathVariable String id, @RequestParam String start, @RequestParam String end, Model model){
+
+        String message ="";
+        Topo topo = topoService.getTopo(Integer.parseInt(id));
+
+        model.addAttribute("title", topo.getTitle());
+        model.addAttribute("author", topo.getAuthor());
+        model.addAttribute("region", topo.getRegion().getName());
+
+        if(borrow(start, end)==1) {
+            message = "Veuillez entrer une date ultérieure";
+        }else if(borrow(start,end) == 2){
+            message = "Les dates de réservations sont enregistrées.";
+        }
+
+        model.addAttribute("message", message);
+
+        return "topoDescription";
     }
 
-    /*@RequestMapping(value = "/entities/{id}", method = RequestMethod.DELETE)
-    public void deleteTopo(@PathVariable String id){
-        topoService.deleteTopo(id);
-    }*/
 
     @RequestMapping("/topos")
     public String displayTopos(Model model){
@@ -72,12 +84,48 @@ public class ToposController {
         return "topos";
     }
 
+
+
+    public int borrow(String start, String end) {
+        Date startDate = null;
+        Date endDate = null;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            startDate = sdf.parse(start);
+            endDate = sdf.parse(end);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (startDate.after(endDate)) {
+
+            return 1;
+        }
+
+        Calendar c0 = Calendar.getInstance();
+        Calendar c1 = Calendar.getInstance();
+        c0.setTime(startDate);
+        c1.setTime(endDate);
+
+        while (!c0.equals(c1)) {
+            c0.add(Calendar.DATE, 1);
+            System.out.println(c0.get(Calendar.DAY_OF_MONTH));
+            borrowingService.addBorrowing(new Borrowing());
+        }
+
+        return 2;
+
+    }
+
+
     private int daysPerMonth(int month, int year){
         int nbDays = 0;
 
         switch (month){
             case 1 : case 3 : case 5 :case 7 :case 8 :case 10 : case 12 : nbDays =31;
-        break;
+                break;
             case 4: case 6 :
             case 9: case 11:
                 nbDays = 30;
@@ -91,8 +139,9 @@ public class ToposController {
                     nbDays = 28;
                 break;}
 
-                return nbDays;
+        return nbDays;
     }
+
 
     private List<Date> generateMonth(int month, int year) throws ParseException {
         List<Date> dates = null;
@@ -122,7 +171,5 @@ public class ToposController {
 
         return dates;
     }
-
-
 
 }
