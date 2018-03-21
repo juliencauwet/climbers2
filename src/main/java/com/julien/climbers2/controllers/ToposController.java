@@ -33,14 +33,9 @@ public class ToposController {
     public String getTopo(@PathVariable String id, Model model){
         int t = Integer.parseInt(id);
         Topo topo = topoService.getTopo(t);
-/* début
 
-
-        model.addAttribute("monthweeks", weeks);
-        model.addAttribute("weekdays", days);
-fin */
         model.addAttribute("title", topo.getTitle());
-        model.addAttribute("author", topo.getAutor());
+        model.addAttribute("author", topo.getAuthor());
         model.addAttribute("region", topo.getRegion().getName());
 
         model.addAttribute("booked","black");

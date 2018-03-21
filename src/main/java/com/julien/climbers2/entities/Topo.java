@@ -1,11 +1,12 @@
 package com.julien.climbers2.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Topo {
@@ -28,6 +29,10 @@ public class Topo {
     @ManyToOne
     private Region region;
 
+    @OneToMany
+    @JoinColumn(name = "topo_id")
+    private Set<Borrowing> borrowing = new HashSet<>();
+
     public Topo(String author, String title, Region region) {
         this.author = author;
         this.title = title;
@@ -42,7 +47,7 @@ public class Topo {
         return id;
     }
 
-    public String getAutor() {
+    public String getAuthor() {
         return author;
     }
 
@@ -65,6 +70,5 @@ public class Topo {
     public void setRegion(Region region) {
         this.region = region;
     }
-
 
 }
