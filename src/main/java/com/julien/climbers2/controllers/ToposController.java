@@ -6,6 +6,7 @@ import com.julien.climbers2.entities.Topo;
 import com.julien.climbers2.service.BorrowingService;
 import com.julien.climbers2.service.RegionService;
 import com.julien.climbers2.service.TopoService;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,10 +61,13 @@ public class ToposController {
         model.addAttribute("author", topo.getAuthor());
         model.addAttribute("region", topo.getRegion().getName());
 
-        if(borrow(start, end, topo)==1) {
+        int result = borrow(start, end, topo);
+        if( result == 1) {
             message = "Veuillez entrer une date ultérieure";
-        }else if(borrow(start, end, topo) == 2){
+        }else if(result == 2){
             message = "Les dates de réservations sont enregistrées.";
+        }else{
+            message = "Certaines ou toutes de ces dates sont déjà prises.";
         }
 
         model.addAttribute("message", message);
@@ -95,33 +99,43 @@ public class ToposController {
         try {
             startDate = sdf.parse(start);
             endDate = sdf.parse(end);
+            System.out.println("startDate: " + startDate);
+            System.out.println("endDate: " + endDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
         if (startDate.after(endDate)) {
-
             return 1;
         }
 
-        Calendar c0 = Calendar.getInstance();
-        Calendar c1 = Calendar.getInstance();
-        c0.setTime(startDate);
-        c1.setTime(endDate);
+        DateTime dt0 = new DateTime(startDate);
+        DateTime dt1 = new DateTime(endDate);
 
-        do  {
-            if (borrowingService.getBorrowing(c0.getTime()) != null)
-                return 2;
-            else
-                c0.add(Calendar.DATE, 1);
-        } while (!c0.equals(c1));
 
-        do  {
-            borrowingService.addBorrowing(new Borrowing(topo, c0.getTime()));
-            c0.add(Calendar.DATE, 1);
-        } while (!c0.equals(c1));
+      Calendar c0 = Calendar.getInstance();
+      Calendar c1 = Calendar.getInstance();
+      c0.setTime(startDate);
+      c1.setTime(endDate);
 
-        return 2;
+
+      do  {
+          if (borrowingService.getBorrowing(dt0.toDate()) != null)
+          return 3;
+          else
+              c0.add(Calendar.DATE, 1);
+          } while (!c0.equals(c1));
+
+      c0.setTime(startDate);
+
+           do  {
+               System.out.println(c0.get(Calendar.DATE));
+               borrowingService.addBorrowing(new Borrowing(topo, c0.getTime()));
+               c0.add(Calendar.DATE, 1);
+               System.out.println(c0.equals(c1));
+           } while (!c0.equals(c1));
+
+        return 3;
 
     }
 
