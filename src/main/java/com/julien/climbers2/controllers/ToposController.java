@@ -60,9 +60,9 @@ public class ToposController {
         model.addAttribute("author", topo.getAuthor());
         model.addAttribute("region", topo.getRegion().getName());
 
-        if(borrow(start, end)==1) {
+        if(borrow(start, end, topo)==1) {
             message = "Veuillez entrer une date ultérieure";
-        }else if(borrow(start,end) == 2){
+        }else if(borrow(start, end, topo) == 2){
             message = "Les dates de réservations sont enregistrées.";
         }
 
@@ -86,7 +86,7 @@ public class ToposController {
 
 
 
-    public int borrow(String start, String end) {
+    public int borrow(String start, String end, Topo topo) {
         Date startDate = null;
         Date endDate = null;
 
@@ -109,11 +109,17 @@ public class ToposController {
         c0.setTime(startDate);
         c1.setTime(endDate);
 
-        while (!c0.equals(c1)) {
+        do  {
+            if (borrowingService.getBorrowing(c0.getTime()) != null)
+                return 2;
+            else
+                c0.add(Calendar.DATE, 1);
+        } while (!c0.equals(c1));
+
+        do  {
+            borrowingService.addBorrowing(new Borrowing(topo, c0.getTime()));
             c0.add(Calendar.DATE, 1);
-            System.out.println(c0.get(Calendar.DAY_OF_MONTH));
-            borrowingService.addBorrowing(new Borrowing());
-        }
+        } while (!c0.equals(c1));
 
         return 2;
 
