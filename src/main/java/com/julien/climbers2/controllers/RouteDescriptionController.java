@@ -1,14 +1,17 @@
 package com.julien.climbers2.controllers;
 
 import com.julien.climbers2.entities.Comment;
+import com.julien.climbers2.entities.Length;
 import com.julien.climbers2.entities.Route;
 import com.julien.climbers2.service.CommentService;
+import com.julien.climbers2.service.LengthService;
 import com.julien.climbers2.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 @Controller
@@ -20,6 +23,9 @@ public class RouteDescriptionController {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private LengthService lengthService;
+
     @GetMapping("/routedescription/{routeId}")
     public String routeDescription(@PathVariable String routeId, Model model){
 
@@ -27,22 +33,29 @@ public class RouteDescriptionController {
 
         List<Comment> comments = commentService.getCommentsperRoute(Integer.parseInt(routeId));
 
+        model.addAttribute("lengths", lengthService.getAllLengthsByRouteId(Integer.parseInt(routeId)));
         model.addAttribute("comments", comments);
         model.addAttribute("route", route);
-
 
         return "routedescription";
     }
 
-    @PostMapping(value = "/routedescription/{routeId}")
-    public String addComment(@RequestParam String email, @RequestParam String text, @PathVariable String routeId, Model model){
-        Comment comment = new Comment();
-        comment.setEmail(email);
-        comment.setText(text);
+    @PostMapping(value = "/routedescription/{routeId}", params = "commentaire")
+    public String addComment(@ModelAttribute Comment comment, @PathVariable String routeId, Model model){
+
         comment.setRoute(routeService.getRoutebyId(Integer.parseInt(routeId)));
         commentService.addComment(comment);
 
         return routeDescription(routeId, model);
+    }
+
+    @PostMapping(value = "/routedescription/{id}", params = "lth")
+    public String addLength(@ModelAttribute Length length, @PathVariable String id, Model model){
+
+        length.setRoute(routeService.getRoutebyId(Integer.parseInt(id)));
+        lengthService.addLength(length);
+
+        return routeDescription(id, model);
     }
 
 

@@ -26,25 +26,26 @@
             <fieldset>
                 <label>Saisir les longueurs et leur cotation </label>
                 <input class="form-control" th:type="text" th:name="name" placeholder="Nom de la longueur"/>
-                <input class="form-control" type="number" placeholder="Cotation chiffre"/>
-                <input class="form-control" type="text" placeholder="Cotation lettre"/>
-                <input  type="submit" value="+"/>
+                <input class="form-control" type="number" name="DRating" placeholder="Cotation chiffre"/>
+                <input class="form-control" type="text" name="CRating" placeholder="Cotation lettre"/>
+                <input  type="submit" name= "lth" value="+"/>
             </fieldset>
         </div>
     </form>
 
-    <!-- Comments -->
+    <!-- Listes des longueurs-->
 
-    <table>
+    <table class="table">
         <tr>
-            <th>email</th>
-            <th>Commentaire</th>
+            <th>Nom de la voie</th>
+            <th>Cotation</th>
         </tr>
-        <tr th:each="item:${comments}">
-            <td th:text="${item.getEmail()}"/>
-            <td th:text="${item.getText()}"/>
+        <tr th:each="length  : ${lengths}">
+            <td th:text="${length.getName()}"></td>
+            <td th:text="${length.getDRating()} + ${length.getCRating()}"></td>
         </tr>
     </table>
+
 
 
 </section>
@@ -59,9 +60,20 @@
             <br/>
             <input class="form-control" type="email" placeholder="Votre adresse email" name="email"/><br/>
             <textarea class="form-control" rows="10" placeholder="Commentaire..." name="text"/><br/>
-            <input type="submit" value="commentaire"/>
+            <input type="submit" name="commentaire" value="commentaire"/>
         </fieldset>
-    </form>
+    </form><br />
+
+    <table class="table">
+        <tr>
+            <th>email</th>
+            <th>Commentaire</th>
+        </tr>
+        <tr th:each="item:${comments}">
+            <td th:text="${item.getEmail()}"/>
+            <td th:text="${item.getText()}"/>
+        </tr>
+    </table>
 
 
 </section>
