@@ -16,6 +16,11 @@
 
 
     <!-- table calendar starts here -->
+
+    <h2>Dates réservées</h2>
+        <ul>
+            <li th:each="borrowing : ${borrowings}" th:text="${borrowing}"/>
+        </ul>
     <h2>Calendrier des réservations</h2>
     <div class="row">
         <div class="col-md-4">
@@ -97,7 +102,7 @@
 
             <input type="submit"/><br/>
 
-            <h3 th:text="${message}"></h3>
+            <h3 th:unless="${!message}" th:text="${message}"></h3>
 
         </fieldset>
     </form>
