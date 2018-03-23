@@ -2,10 +2,7 @@ package com.julien.climbers2.entities;
 
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class Length {
@@ -59,6 +56,7 @@ public class Length {
         this.CRating = CRating;
     }
 
+    @ManyToOne(cascade = CascadeType.ALL)
     public Route getRoute() {
         return route;
     }

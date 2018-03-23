@@ -14,11 +14,25 @@
     <!-- description de la voie -->
 
     <h3 th:unless="!${route}" th:text="'Nom de la voie: ' + ${route.getName()}">Pas de nom</h3><br/>
-    <h3 th:unless="!${route}" th:text="'Nombre de longueurs: ' + ${route.getLengths().size()}">Pas de longueurs</h3><br/>
-   <!--
-    <h3 th:text="'Difficulté: de ' + ${} ' à ' + ${}"></h3><br/>
+    <h3 th:unless="!${route}" th:text="'Nombre de longueurs: ' + ${route.getLengths().size()}">Pas de longueurs</h3>
     <br/>
--->
+    <!--
+     <h3 th:text="'Difficulté: de ' + ${} ' à ' + ${}"></h3><br/>
+     <br/>
+ -->
+
+    <form method="post">
+        <div class="form-group">
+            <fieldset>
+                <label>Saisir les longueurs et leur cotation </label>
+                <input class="form-control" th:type="text" th:name="name" placeholder="Nom de la longueur"/>
+                <input class="form-control" type="number" placeholder="Cotation chiffre"/>
+                <input class="form-control" type="text" placeholder="Cotation lettre"/>
+                <input  type="submit" value="+"/>
+            </fieldset>
+        </div>
+    </form>
+
     <!-- Comments -->
 
     <table>
@@ -33,23 +47,22 @@
     </table>
 
 
-
 </section>
 
 <section layout:fragment="content-right">
 
     <!-- Formulaire -->
-    <fieldset>
-        <form method="post">
-            <label>Laissez un commentaire pour vos impressions sur cette voie</label><br/>
+
+    <form method="post">
+        <fieldset>
+            <label>Laissez un commentaire pour vos impressions sur cette voie</label>
             <br/>
-            <input type="email" placeholder="Votre adresse email" name="email"/><br/>
-            <br/>
-            <textarea rows="10" placeholder="Commentaire..." name="text"/><br/>
-            <br/>
-            <input type="submit"/>
-        </form>
-    </fieldset>
+            <input class="form-control" type="email" placeholder="Votre adresse email" name="email"/><br/>
+            <textarea class="form-control" rows="10" placeholder="Commentaire..." name="text"/><br/>
+            <input type="submit" value="commentaire"/>
+        </fieldset>
+    </form>
+
 
 </section>
 

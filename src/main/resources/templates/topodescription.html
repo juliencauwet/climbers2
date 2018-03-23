@@ -94,14 +94,15 @@
 
     <form method="post">
         <fieldset>
+            <div class="form-group">
             <label>Emprunter ce topo</label><br/>
             <label>Du:</label><br/>
-            <input type="date" name="start"/><br/>
+            <input class="form-control" type="date" name="start"/><br/>
             <label>Au:</label><br/>
-            <input type="date" name="end"/><br/>
+            <input class="form-control" type="date" name="end"/><br/>
 
             <input type="submit"/><br/>
-
+            </div>
             <h3 th:unless="${!message}" th:text="${message}"></h3>
 
         </fieldset>

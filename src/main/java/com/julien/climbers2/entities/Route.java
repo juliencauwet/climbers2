@@ -53,6 +53,8 @@ public class Route {
         this.area = area;
     }
 
+    @OneToMany
+    @JoinColumn(name = "route_id")
     public Set<Length> getLengths() {
         return lengths;
     }

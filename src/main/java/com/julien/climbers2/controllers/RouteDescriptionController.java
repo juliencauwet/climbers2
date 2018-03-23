@@ -34,7 +34,7 @@ public class RouteDescriptionController {
         return "routedescription";
     }
 
-    @PostMapping("/routedescription/{routeId}")
+    @PostMapping(value = "/routedescription/{routeId}")
     public String addComment(@RequestParam String email, @RequestParam String text, @PathVariable String routeId, Model model){
         Comment comment = new Comment();
         comment.setEmail(email);
@@ -44,4 +44,6 @@ public class RouteDescriptionController {
 
         return routeDescription(routeId, model);
     }
+
+
 }
