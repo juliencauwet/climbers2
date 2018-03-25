@@ -37,8 +37,13 @@ public class RoutesController {
     @RequestMapping(value = "/routes", method = RequestMethod.GET)
     public String routes(Model model, HttpSession session){
 
-        List<Region> regions = regionService.getRegions();
-        model.addAttribute("regList", regions);
+        try {
+            Usor usor = (Usor)session.getAttribute("user");
+            model.addAttribute("username", usor.getPseudo());
+        }catch (NullPointerException e){
+            System.out.println("Pas d'utilisateur identifié");
+        }
+        model.addAttribute("regList", regionService.getRegions());
 
     return "routes";
     }
@@ -52,42 +57,30 @@ public class RoutesController {
     @RequestMapping(method = RequestMethod.POST, value = "/routes")
     public String displaySites(@RequestParam String region, Model model, HttpSession session){
 
-        try {
-            Usor usor = (Usor)session.getAttribute("user");
-            model.addAttribute("username", usor.getPseudo());
-        }catch (NullPointerException e){
-            System.out.println("Pas d'utilisateur identifié");
-        }
-
-        model.addAttribute("regList", regionService.getRegions());
         model.addAttribute("sites", siteService.getSitesByRegionId(Integer.parseInt(region)));
 
-        return "routes";
+        return routes(model, session);
     }
 
     @GetMapping("/routes/{siteId}")
     public String displayAreas (@PathVariable String siteId, Model model, HttpSession session){
 
-       model.addAttribute("regList", regionService.getRegions());
        model.addAttribute("areas", areaService.getAreasperSites(Integer.parseInt(siteId)));
 
-        return "routes";
+        return routes(model, session);
     }
 
     @GetMapping("/routes/{siteId}/{areaId}")
-    public String displayRoutes (@PathVariable String siteId, @PathVariable String areaId, Model model, HttpSession session){
+    public String displayRoutes (@PathVariable String areaId, Model model, HttpSession session){
 
-        model.addAttribute("regList", regionService.getRegions());
         model.addAttribute("routes", routeService.getRoutesPerArea(Integer.parseInt(areaId)));
         model.addAttribute("selectedArea", areaService.getAreaPerId(Integer.parseInt(areaId)).getName());
 
-        Boolean form = true;
-
-        return "routes";
+        return routes(model, session);
     }
 
     @PostMapping(value = "/routes/{siteId}/{areaId}", params = "Ajouter")
-    public String addRoute(@PathVariable String siteId, @PathVariable String areaId, @RequestParam String name, Model model){
+    public String addRoute(@PathVariable String areaId, @RequestParam String name, Model model, HttpSession session){
 
         Area selectedArea = areaService.getAreaPerId(Integer.parseInt(areaId));
 
@@ -98,7 +91,7 @@ public class RoutesController {
 
         model.addAttribute("selectedArea", selectedArea.getName());
 
-        return "routes";
+        return routes(model, session);
     }
 
 

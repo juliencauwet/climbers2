@@ -3,6 +3,7 @@ package com.julien.climbers2.controllers;
 import com.julien.climbers2.entities.Borrowing;
 import com.julien.climbers2.entities.Region;
 import com.julien.climbers2.entities.Topo;
+import com.julien.climbers2.entities.Usor;
 import com.julien.climbers2.service.BorrowingService;
 import com.julien.climbers2.service.RegionService;
 import com.julien.climbers2.service.TopoService;
@@ -34,7 +35,7 @@ public class ToposController {
 
 
     @RequestMapping("/topos/{id}")
-    public String getTopo(@PathVariable String id, Model model) {
+    public String getTopo(@PathVariable String id, Model model, HttpSession session) {
         String message = "";
         Topo topo = topoService.getTopo(Integer.parseInt(id));
 
@@ -44,18 +45,33 @@ public class ToposController {
         model.addAttribute("message", message);
         model.addAttribute("borrowings", getAllBooked(id));
 
+        try {
+            Usor usor = (Usor)session.getAttribute("user");
+            model.addAttribute("username", usor.getPseudo());
+        }catch (NullPointerException e){
+            System.out.println("Pas d'utilisateur identifié");
+        }
+
         return "topodescription";
     }
 
     @RequestMapping(value = "/topos", method = RequestMethod.POST)
-    public void addTopo(@ModelAttribute @Valid Topo topo, Model model) {
+    public void addTopo(@ModelAttribute @Valid Topo topo, Model model, HttpSession session) {
+
+        try {
+            Usor usor = (Usor)session.getAttribute("user");
+            model.addAttribute("username", usor.getPseudo());
+        }catch (NullPointerException e){
+            System.out.println("Pas d'utilisateur identifié");
+        }
 
         topoService.addTopo(topo);
-        displayTopos(model);
+
+        displayTopos(model, session);
     }
 
     @RequestMapping(value = "/topos/{id}", method = RequestMethod.POST)
-    public String topoDescription(@PathVariable String id, @RequestParam String start, @RequestParam String end, Model model) {
+    public String topoDescription(@PathVariable String id, @RequestParam String start, @RequestParam String end, Model model, HttpSession session) {
 
         String message = "";
         Topo topo = topoService.getTopo(Integer.parseInt(id));
@@ -78,16 +94,29 @@ public class ToposController {
         model.addAttribute("borrowings", getAllBooked(id));
         model.addAttribute("message", message);
 
+        try {
+            Usor usor = (Usor)session.getAttribute("user");
+            model.addAttribute("username", usor.getPseudo());
+        }catch (NullPointerException e){
+            System.out.println("Pas d'utilisateur identifié");
+        }
+
         return "topoDescription";
     }
 
 
     @RequestMapping("/topos")
-    public String displayTopos(Model model) {
+    public String displayTopos(Model model, HttpSession session) {
 
         model.addAttribute("list", topoService.getTopos());
-
         model.addAttribute("regions", regionService.getRegions());
+
+        try {
+            Usor usor = (Usor)session.getAttribute("user");
+            model.addAttribute("username", usor.getPseudo());
+        }catch (NullPointerException e){
+            System.out.println("Pas d'utilisateur identifié");
+        }
 
         return "topos";
     }
