@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
     <head layout:fragment="head">
@@ -24,7 +24,8 @@
                 </div><br />
                 <!-- col 3  -->
                 <div class="col-md-2">
-                    <a href="/sign">Sign In / Sign up</a>
+                    <a th:unless="${username}" href="/sign">Sign In / Sign up</a>
+                    <h3 th:unless="!${username}" th:text="'Bienvenue, ' + ${username}"/>
                 </div>
             </header>
 

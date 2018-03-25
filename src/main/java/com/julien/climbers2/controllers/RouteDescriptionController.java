@@ -3,6 +3,7 @@ package com.julien.climbers2.controllers;
 import com.julien.climbers2.entities.Comment;
 import com.julien.climbers2.entities.Length;
 import com.julien.climbers2.entities.Route;
+import com.julien.climbers2.entities.Usor;
 import com.julien.climbers2.service.CommentService;
 import com.julien.climbers2.service.LengthService;
 import com.julien.climbers2.service.RouteService;
@@ -12,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -26,8 +28,18 @@ public class RouteDescriptionController {
     @Autowired
     private LengthService lengthService;
 
+
+
     @GetMapping("/routedescription/{routeId}")
-    public String routeDescription(@PathVariable String routeId, Model model){
+    public String routeDescription(@PathVariable String routeId, Model model, HttpSession session){
+
+
+        try {
+            Usor usor = (Usor)session.getAttribute("user");
+            model.addAttribute("username", usor.getPseudo());
+        }catch (NullPointerException e){
+            System.out.println("Pas d'utilisateur identifié");
+        }
 
         Route route = routeService.getRoutebyId(Integer.parseInt(routeId));
 
@@ -41,21 +53,21 @@ public class RouteDescriptionController {
     }
 
     @PostMapping(value = "/routedescription/{routeId}", params = "commentaire")
-    public String addComment(@ModelAttribute Comment comment, @PathVariable String routeId, Model model){
+    public String addComment(@ModelAttribute Comment comment, @PathVariable String routeId, Model model, HttpSession session){
 
         comment.setRoute(routeService.getRoutebyId(Integer.parseInt(routeId)));
         commentService.addComment(comment);
 
-        return routeDescription(routeId, model);
+        return routeDescription(routeId, model, session);
     }
 
     @PostMapping(value = "/routedescription/{id}", params = "lth")
-    public String addLength(@ModelAttribute Length length, @PathVariable String id, Model model){
+    public String addLength(@ModelAttribute Length length, @PathVariable String id, Model model, HttpSession session){
 
         length.setRoute(routeService.getRoutebyId(Integer.parseInt(id)));
         lengthService.addLength(length);
 
-        return routeDescription(id, model);
+        return routeDescription(id, model, session);
     }
 
 

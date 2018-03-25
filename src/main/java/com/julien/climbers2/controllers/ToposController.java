@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.NonUniqueResultException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.ParseException;
@@ -33,8 +34,8 @@ public class ToposController {
 
 
     @RequestMapping("/topos/{id}")
-    public String getTopo(@PathVariable String id, Model model){
-        String message ="";
+    public String getTopo(@PathVariable String id, Model model) {
+        String message = "";
         Topo topo = topoService.getTopo(Integer.parseInt(id));
 
         model.addAttribute("title", topo.getTitle());
@@ -47,16 +48,16 @@ public class ToposController {
     }
 
     @RequestMapping(value = "/topos", method = RequestMethod.POST)
-    public void addTopo(@ModelAttribute @Valid Topo topo, Model model){
+    public void addTopo(@ModelAttribute @Valid Topo topo, Model model) {
 
         topoService.addTopo(topo);
         displayTopos(model);
     }
 
     @RequestMapping(value = "/topos/{id}", method = RequestMethod.POST)
-    public String topoDescription(@PathVariable String id, @RequestParam String start, @RequestParam String end, Model model){
+    public String topoDescription(@PathVariable String id, @RequestParam String start, @RequestParam String end, Model model) {
 
-        String message ="";
+        String message = "";
         Topo topo = topoService.getTopo(Integer.parseInt(id));
 
         model.addAttribute("title", topo.getTitle());
@@ -64,11 +65,12 @@ public class ToposController {
         model.addAttribute("region", topo.getRegion().getName());
 
         int result = borrow(start, end, topo);
-        if( result == 1) {
+
+        if (result == 1) {
             message = "Veuillez entrer une date ultérieure";
-        }else if(result == 2){
+        } else if (result == 2) {
             message = "Certaines ou toutes de ces dates sont déjà prises.";
-        }else{
+        } else {
             message = "Les dates de réservations sont enregistrées.";
         }
 
@@ -81,7 +83,7 @@ public class ToposController {
 
 
     @RequestMapping("/topos")
-    public String displayTopos(Model model){
+    public String displayTopos(Model model) {
 
         model.addAttribute("list", topoService.getTopos());
 
@@ -91,8 +93,7 @@ public class ToposController {
     }
 
 
-
-    public int borrow(String start, String end, Topo topo) {
+    public int borrow(String start, String end, Topo topo){
         Date startDate = null;
         Date endDate = null;
 
@@ -101,8 +102,6 @@ public class ToposController {
         try {
             startDate = sdf.parse(start);
             endDate = sdf.parse(end);
-            System.out.println("startDate: " + startDate);
-            System.out.println("endDate: " + endDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -111,40 +110,53 @@ public class ToposController {
             return 1;
         }
 
-      Calendar c0 = Calendar.getInstance();
-      Calendar c1 = Calendar.getInstance();
-      c0.setTime(startDate);
-      c1.setTime(endDate);
+        Calendar c0 = Calendar.getInstance();
+        Calendar c1 = Calendar.getInstance();
+        c0.setTime(startDate);
+        c1.setTime(endDate);
+        c1.add(Calendar.DATE, 1);
 
-      Borrowing borrowing = borrowingService.getBorrowing(c0.getTime());
+        List<Borrowing> borrowing;
 
-      do  {
-          if (borrowing != null && (topo == borrowing.getTopo()))
-          return 2;
-          else
-              c0.add(Calendar.DATE, 1);
-          } while (!c0.equals(c1));
+        do {
 
-      c0.setTime(startDate);
+            borrowing = borrowingService.getBorrowing(c0.getTime(), topo.getId());
 
-           do  {
-               borrowingService.addBorrowing(new Borrowing(topo, c0.getTime()));
-               c0.add(Calendar.DATE, 1);
-           } while (!c0.equals(c1));
+            if (borrowing.size() > 0 )
+                return 2;
+            else
+                c0.add(Calendar.DATE, 1);
+        } while (!c0.equals(c1));
+
+        c0.setTime(startDate);
+
+        do {
+            borrowingService.addBorrowing(new Borrowing(topo, c0.getTime()));
+            c0.add(Calendar.DATE, 1);
+        } while (!c0.equals(c1));
 
         return 3;
 
     }
 
 
-    private int daysPerMonth(int month, int year){
+    private int daysPerMonth(int month, int year) {
         int nbDays = 0;
 
-        switch (month){
-            case 1 : case 3 : case 5 :case 7 :case 8 :case 10 : case 12 : nbDays =31;
+        switch (month) {
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+            case 12:
+                nbDays = 31;
                 break;
-            case 4: case 6 :
-            case 9: case 11:
+            case 4:
+            case 6:
+            case 9:
+            case 11:
                 nbDays = 30;
                 break;
             case 2:
@@ -154,43 +166,34 @@ public class ToposController {
                     nbDays = 29;
                 else
                     nbDays = 28;
-                break;}
+                break;
+        }
 
         return nbDays;
     }
 
-/*
-    private List<String> generateMonth(int month, int year) throws ParseException {
-        List<Date> dates = null;
-        String date = "01/" + Integer.toString(month) + "/" + Integer.toString(year);
-        String end = Integer.toString(daysPerMonth(month,year));
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
 
-        Date firstDay = sdf.parse(date);
-        Date lastDay = sdf.parse(end);
+    private List<Date> generateGridperMonth() throws ParseException {
 
-        Calendar c = Calendar.getInstance();
-        c.setTime(firstDay);
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
 
-        ArrayList<Date> days = new ArrayList<Date>();
-        for(Date d = firstDay ; !d.equals(lastDay)  ;){
-            dates.add(d);
-        }
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
 
-        System.out.println(days.size());
+        List<Date> dates = new ArrayList<>();
+        int nbWeeks = 5;
+        if (daysPerMonth(month ,year) == 28)
+            nbWeeks = 4;
 
-        ArrayList<String> weeks = new ArrayList<String>();
-        for(int i =1 ; i < 5 ; i++){
-            weeks.add(Integer.toString(i));
-        }
-
-
+        System.out.println(cal.get(Calendar.DAY_OF_WEEK));
 
         return dates;
     }
-*/
 
-    private List<String> getAllBooked(String topoId){
+
+    private List<String> getAllBooked(String topoId) {
         List<String> dates = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
         for (Borrowing bor : borrowingService.getAllBorrowingsByTopoId(Integer.parseInt(topoId)))

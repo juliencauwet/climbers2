@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class BorrowingService {
+public class BorrowingService{
 
     @Autowired
     private BorrowingRepository borrowingRepository;
@@ -26,7 +26,7 @@ public class BorrowingService {
         borrowingRepository.save(borrowing);
     }
 
-    public Borrowing getBorrowing(Date date){
-        return borrowingRepository.findBorrowingByBooked(date);
+    public List <Borrowing> getBorrowing(Date date, int topoId){
+        return borrowingRepository.findBorrowingByBookedAndTopo_Id(date, topoId);
     }
 }

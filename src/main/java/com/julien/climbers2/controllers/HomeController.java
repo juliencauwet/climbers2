@@ -21,24 +21,17 @@ public class HomeController {
     @Autowired
     private RegionService regionService;
 
-    @Autowired
-    private SiteService siteService;
-
     @RequestMapping("/")
     public String index(Model model, HttpSession session){
 
         try {
             Usor usor = (Usor)session.getAttribute("user");
-
-            System.out.println("user = " + usor.getPseudo());
             model.addAttribute("username", usor.getPseudo());
         }catch (NullPointerException e){
             System.out.println("Pas d'utilisateur identifié");
         }
 
-        List<Region> regionsList = regionService.getRegions();
-        model.addAttribute("list", regionsList);
-
+        model.addAttribute("list", regionService.getRegions());
 
         return "index";
 

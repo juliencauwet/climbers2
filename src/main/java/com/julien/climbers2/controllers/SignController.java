@@ -31,8 +31,6 @@ public class SignController {
 
         Usor usor = usorService.getUsorByEmail(emailIn);
 
-        System.out.println(usor.getEmail());
-        System.out.println(emailIn);
         if (usor == null)
             message = "Cet email n'est associé à aucun compte.";
         else {

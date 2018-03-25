@@ -29,13 +29,14 @@
                     <tr>Janvier</tr>
                     <thead>
                     <tr>
-                        <th  abbr="Lundi" scope="col" title="Lundi">L</th>
+                        <th abbr="Dimanche" scope="col" title="Dimanche">D</th>
+                        <th abbr="Lundi" scope="col" title="Lundi">L</th>
                         <th abbr="Mardi" scope="col" title="Mardi">M</th>
                         <th abbr="Mercredi" scope="col" title="Mercredi">M</th>
                         <th abbr="Jeudi" scope="col" title="Jeudi">J</th>
                         <th abbr="Vendredi" scope="col" title="Vendredi">V</th>
                         <th abbr="Samedi" scope="col" title="Samedi">S</th>
-                        <th abbr="Dimanche" scope="col" title="Dimanche">D</th>
+
                     </tr>
                     </thead>
 
@@ -103,7 +104,7 @@
 
             <input type="submit"/><br/>
             </div>
-            <h3 th:unless="${!message}" th:text="${message}"></h3>
+            <h3 th:text="${message}"></h3>
 
         </fieldset>
     </form>

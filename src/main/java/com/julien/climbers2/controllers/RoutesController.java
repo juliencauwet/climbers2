@@ -1,10 +1,7 @@
 package com.julien.climbers2.controllers;
 
 
-import com.julien.climbers2.entities.Area;
-import com.julien.climbers2.entities.Region;
-import com.julien.climbers2.entities.Route;
-import com.julien.climbers2.entities.Site;
+import com.julien.climbers2.entities.*;
 import com.julien.climbers2.service.AreaService;
 import com.julien.climbers2.service.RegionService;
 import com.julien.climbers2.service.RouteService;
@@ -38,7 +35,7 @@ public class RoutesController {
      * @return view routes en mode Get
      */
     @RequestMapping(value = "/routes", method = RequestMethod.GET)
-    public String routes(Model model){
+    public String routes(Model model, HttpSession session){
 
         List<Region> regions = regionService.getRegions();
         model.addAttribute("regList", regions);
@@ -53,40 +50,36 @@ public class RoutesController {
      * @return
      */
     @RequestMapping(method = RequestMethod.POST, value = "/routes")
-    public String displaySites(@RequestParam String region, Model model){
+    public String displaySites(@RequestParam String region, Model model, HttpSession session){
 
-        List<Region> regions = regionService.getRegions();
-        model.addAttribute("regList", regions);
+        try {
+            Usor usor = (Usor)session.getAttribute("user");
+            model.addAttribute("username", usor.getPseudo());
+        }catch (NullPointerException e){
+            System.out.println("Pas d'utilisateur identifié");
+        }
 
-        List<Site> sites = siteService.getSitesByRegionId(Integer.parseInt(region));
-        model.addAttribute("sites",sites);
+        model.addAttribute("regList", regionService.getRegions());
+        model.addAttribute("sites", siteService.getSitesByRegionId(Integer.parseInt(region)));
 
         return "routes";
     }
 
     @GetMapping("/routes/{siteId}")
-    public String displayAreas (@PathVariable String siteId, Model model){
+    public String displayAreas (@PathVariable String siteId, Model model, HttpSession session){
 
-        List<Region> regions = regionService.getRegions();
-        model.addAttribute("regList", regions);
-
-       List<Area> areas = areaService.getAreasperSites(Integer.parseInt(siteId));
-       model.addAttribute("areas", areas );
+       model.addAttribute("regList", regionService.getRegions());
+       model.addAttribute("areas", areaService.getAreasperSites(Integer.parseInt(siteId)));
 
         return "routes";
     }
 
     @GetMapping("/routes/{siteId}/{areaId}")
-    public String displayRoutes (@PathVariable String siteId, @PathVariable String areaId, Model model){
+    public String displayRoutes (@PathVariable String siteId, @PathVariable String areaId, Model model, HttpSession session){
 
-        List<Region> regions = regionService.getRegions();
-        model.addAttribute("regList", regions);
-
-        List<Route> routes = routeService.getRoutesPerArea(Integer.parseInt(areaId));
-        model.addAttribute("routes", routes);
-
-        Area selectedArea = areaService.getAreaPerId(Integer.parseInt(areaId));
-        model.addAttribute("selectedArea", selectedArea.getName());
+        model.addAttribute("regList", regionService.getRegions());
+        model.addAttribute("routes", routeService.getRoutesPerArea(Integer.parseInt(areaId)));
+        model.addAttribute("selectedArea", areaService.getAreaPerId(Integer.parseInt(areaId)).getName());
 
         Boolean form = true;
 
@@ -95,7 +88,6 @@ public class RoutesController {
 
     @PostMapping(value = "/routes/{siteId}/{areaId}", params = "Ajouter")
     public String addRoute(@PathVariable String siteId, @PathVariable String areaId, @RequestParam String name, Model model){
-        System.out.println("Entrée dans addRoute");
 
         Area selectedArea = areaService.getAreaPerId(Integer.parseInt(areaId));
 
