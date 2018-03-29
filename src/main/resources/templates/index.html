@@ -28,17 +28,7 @@
         </section>
 
         <section layout:fragment="content-right">
-        <form action="/routes">
-            <fieldset>
-                <legend>Rechercher un parcours</legend>
-                <label >Région</label><br />
-                <select name="region">
-                    <option th:each="item:${list}" th:text="${item.getName()}" th:value="${item.getId()}"></option>
-                </select>
-                <input type="submit"/>
-            </fieldset>
 
-        </form>
         </section>
     </body>
 </html>

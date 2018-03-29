@@ -13,28 +13,34 @@
     <!-- INSERT CONTENT HERE -->
     <div class="row">
         <div class="col-md-4">
-            <h2>Sites</h2>
-            <ul th:each="site : ${sites}">
+            <table class="table">
+            <th>Sites</th>
+            <tr th:each="site : ${sites}">
 
-                <li><a style="color: #213370" th:href="@{'/routes/' + ${site.getId()}}" th:value="${site.getId()}"
-                       th:text="${site.getName()}"/></li>
-            </ul>
+                <td><a style="color: #213370" th:href="@{'/routes/' + ${site.getId()}}" th:value="${site.getId()}"
+                       th:text="${site.getName()}"/></td>
+            </tr>
+            </table>
         </div>
         <div class="col-md-4">
-            <h2>Secteurs</h2>
-            <ul th:each="area : ${areas}">
-                <li>
+            <table class="table">
+            <th>Secteurs</th>
+            <tr th:each="area : ${areas}">
+                <td>
                 <a style="color: #213370"
                        th:href="@{'/routes/' + ${area.getSite().getId()} + '/' + ${area.getId()}}"
-                       th:value="${area.getId()}" th:text="${area.getName()}"/></li>
-            </ul>
+                       th:value="${area.getId()}" th:text="${area.getName()}"/></td>
+            </tr>
+            </table>
         </div>
         <div class="col-md-4">
-            <h2>Voies</h2>
-            <ul th:each="route : ${routes}">
-                <li><a style="color: #213370" th:href="@{'/routedescription/' + ${route.getId()}}"
-                       th:value="${route.getId()}" th:text="${route.getName()}"/></li>
-            </ul>
+            <table class="table">
+            <th>Voies</th>
+            <tr th:each="route : ${routes}">
+                <td><a style="color: #213370" th:href="@{'/routedescription/' + ${route.getId()}}"
+                       th:value="${route.getId()}" th:text="${route.getName()}"/></td>
+            </tr>
+            </table>
         </div>
 
     </div>
@@ -46,10 +52,10 @@
         <fieldset>
             <div class="form-group">
             <label>Trouver un parcours en choisissant une région</label><br/>
-            <label>Région</label><br/>
+            <label>Région</label>
             <select name="region" class="form-control">
                 <option th:each="reg:${regList}" th:text="${reg.getName()}" th:value="${reg.getId()} "></option>
-            </select><br/>
+            </select>
             <br/>
             <input type="submit" name="Chercher" value="Chercher"/>
             </div>

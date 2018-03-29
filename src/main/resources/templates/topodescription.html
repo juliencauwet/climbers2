@@ -21,6 +21,9 @@
         <ul>
             <li th:each="borrowing : ${borrowings}" th:text="${borrowing}"/>
         </ul>
+
+    <!--
+
     <h2>Calendrier des réservations</h2>
     <div class="row">
         <div class="col-md-4">
@@ -41,11 +44,11 @@
                     </thead>
 
                     <tbody>
-                    <!--
+
                     <tr th:each="week:${monthweeks}">
                         <td th:each="day:${weekdays}" th:text="" th:value="" th:style="'background:' + ${booked} + ';'">1</td>
                     </tr>
-                    -->
+
                     <tr>
                         <td>8</td>
                         <td>9</td>
@@ -86,7 +89,7 @@
 
     </div>
 
-    <!-- table calendar ends here -->
+    table calendar ends here -->
 
 
 </section>

@@ -37,6 +37,7 @@ public class RouteDescriptionController {
         try {
             Usor usor = (Usor)session.getAttribute("user");
             model.addAttribute("username", usor.getPseudo());
+            model.addAttribute("useremail", usor.getEmail());
         }catch (NullPointerException e){
             System.out.println("Pas d'utilisateur identifié");
         }

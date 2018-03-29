@@ -58,7 +58,7 @@
         <fieldset>
             <label>Laissez un commentaire pour vos impressions sur cette voie</label>
             <br/>
-            <input class="form-control" type="email" placeholder="Votre adresse email" name="email"/><br/>
+            <input class="form-control" type="email" placeholder="Votre adresse email" th:default="${useremail}" name="email"/><br/>
             <textarea class="form-control" rows="10" placeholder="Commentaire..." name="text"/><br/>
             <input type="submit" name="commentaire" value="commentaire"/>
         </fieldset>

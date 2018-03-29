@@ -30,7 +30,6 @@ public class HomeController {
         }catch (NullPointerException e){
             System.out.println("Pas d'utilisateur identifié");
         }
-
         model.addAttribute("list", regionService.getRegions());
 
         return "index";
