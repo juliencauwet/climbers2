@@ -25,8 +25,10 @@
         <div class="col-md-4">
             <table class="table">
             <th>Secteurs</th>
+            <!--/*@thymesVar id="areas" type="java"*/-->
             <tr th:each="area : ${areas}">
                 <td>
+                <!--/*@thymesVar id="getSite" type="java"*/-->
                 <a style="color: #213370"
                        th:href="@{'/routes/' + ${area.getSite().getId()} + '/' + ${area.getId()}}"
                        th:value="${area.getId()}" th:text="${area.getName()}"/></td>
