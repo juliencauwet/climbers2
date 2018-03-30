@@ -125,6 +125,7 @@ public class ToposController {
     public int borrow(String start, String end, Topo topo){
         Date startDate = null;
         Date endDate = null;
+        Date today = new Date();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -135,7 +136,7 @@ public class ToposController {
             e.printStackTrace();
         }
 
-        if (startDate.after(endDate)) {
+        if (startDate.after(endDate) || today.after(startDate)) {
             return 1;
         }
 
